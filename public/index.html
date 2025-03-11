@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <style>
+    /* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* General Body Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #ffffff, #e3f2fd); /* Light Blue Gradient */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Centered Container */
+.container {
+    flex: 1;
+    width: 90%;
+    max-width: 800px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.7);
+    margin-top: 20px;
+    transition: 0.3s;
+}
+
+/* Title */
+h1 {
+    text-align: center;
+    color: #1976D2;
+    font-size: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* Input Field */
+input[type="url"] {
+    width: 70%;
+    padding: 12px;
+    border: 2px solid #1976D2;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    background: #f8f9fa;
+    color: #333;
+    transition: all 0.3s;
+}
+
+input[type="url"]:focus {
+    border-color: #ff4081;
+    box-shadow: 0px 0px 10px rgba(255, 64, 129, 0.5);
+}
+
+/* Shorten Button */
+button {
+    padding: 12px 18px;
+    background: linear-gradient(135deg, #1976D2, #ff4081);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff4081, #1976D2);
+}
+
+/* Shortened URL Display */
+#result {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(25, 118, 210, 0.1);
+    text-align: center;
+    display: none;
+    font-weight: 500;
+}
+
+/* Recent URLs */
+.url-list {
+    margin-top: 30px;
+    padding: 15px;
+    background: rgba(255, 64, 129, 0.1);
+    border-radius: 10px;
+}
+
+/* URL Item */
+.url-item {
+    padding: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* Copy Button */
+.copy-btn {
+    background: #007BFF;
+    margin-left: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.copy-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+    width: 100%;
+    background: linear-gradient(45deg, #ff4081, #1976D2);
+    color: white;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+    margin-top: auto;
+}
+
+.footer:hover {
+    background: linear-gradient(45deg, #1976D2, #ff4081);
+    letter-spacing: 1px;
+}
+
+.name {
+    color: yellow;
+    transition: color 0.3s ease-in-out;
+}
+
+.name:hover {
+    color: cyan;
+}
+
+/* Dark Mode */
+.dark-mode {
+    background: linear-gradient(to right, #121212, #1e1e1e);
+    color: white;
+}
+
+.dark-mode .container {
+    background: #1e1e1e;
+    box-shadow: 5px 5px 15px rgba(255, 255, 255, 0.1), -5px -5px 15px rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode h1 {
+    color: #ff4081;
+}
+
+.dark-mode input[type="url"] {
+    background: #333;
+    color: white;
+    border-color: #ff4081;
+}
+
+.dark-mode button {
+    background: linear-gradient(135deg, #ff4081, #1976D2);
+}
+
+.dark-mode .footer {
+    background: linear-gradient(45deg, #121212, #1e1e1e);
+}
+
+.dark-mode .footer:hover {
+    background: linear-gradient(45deg, #1e1e1e, #121212);
+}
+
+
+
+
+    </style>
+</head>
+<body>
+  <div class="container">
+    <h1>URL Shortener</h1>
+    <div>
+      <input type="url" id="longUrl" placeholder="Enter a long URL here" required>
+      <button id="shortenBtn">Shorten</button>
+    </div>
+    
+    <div id="result">
+      <h3>Your shortened URL:</h3>
+      <p id="shortUrl"></p>
+      <button id="copyBtn" class="copy-btn">Copy</button>
+    </div>
+    
+    <div class="url-list">
+      <h2>Recent URLs</h2>
+      <div id="urlList"></div>
+    </div>
+  </div>
+  <footer class="footer">
+    <p>
+        Made with ❤️ by <span class="name">Awadhesh Kumar</span> | 
+        <span id="year"></span>
+    </p>
+</footer>
+
+<script>
+    // Update year dynamically
+    document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const shortenBtn = document.getElementById('shortenBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const result = document.getElementById('result');
+      const shortUrlEl = document.getElementById('shortUrl');
+      const urlListEl = document.getElementById('urlList');
+      
+      // Load existing URLs
+      fetchUrls();
+      
+      // Shorten URL
+      shortenBtn.addEventListener('click', async () => {
+        const longUrl = document.getElementById('longUrl').value;
+        
+        if (!longUrl) {
+          alert('Please enter a URL');
+          return;
+        }
+        
+        try {
+          const response = await fetch('/api/url/shorten', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ longUrl })
+          });
+          
+          const data = await response.json();
+          
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+          
+          shortUrlEl.textContent = data.shortUrl;
+          shortUrlEl.href = data.shortUrl;
+          result.style.display = 'block';
+          
+          // Refresh URL list
+          fetchUrls();
+        } catch (err) {
+          console.error('Error:', err);
+          alert('Something went wrong');
+        }
+      });
+      
+      // Copy to clipboard
+      copyBtn.addEventListener('click', () => {
+        const shortUrl = shortUrlEl.textContent;
+        navigator.clipboard.writeText(shortUrl)
+          .then(() => {
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+              copyBtn.textContent = 'Copy';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy:', err);
+          });
+      });
+      
+      // Fetch all URLs
+      async function fetchUrls() {
+        try {
+          const response = await fetch('/api/urls');
+          const urls = await response.json();
+          
+          urlListEl.innerHTML = '';
+          
+          if (urls.length === 0) {
+            urlListEl.innerHTML = '<p>No URLs shortened yet</p>';
+            return;
+          }
+          
+          urls.forEach(url => {
+            const urlItem = document.createElement('div');
+            urlItem.className = 'url-item';
+            urlItem.innerHTML = `
+              <p><strong>Short URL:</strong> <a href="${url.shortUrl}" target="_blank">${url.shortUrl}</a></p>
+              <p><strong>Original URL:</strong> <a href="${url.longUrl}" target="_blank">${url.longUrl.substring(0, 50)}${url.longUrl.length > 50 ? '...' : ''}</a></p>
+              <p><strong>Created:</strong> ${new Date(url.createdAt).toLocaleString()}</p>
+              <p><strong>Clicks:</strong> ${url.clicks}</p>
+            `;
+            urlListEl.appendChild(urlItem);
+          });
+        } catch (err) {
+          console.error('Error fetching URLs:', err);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
